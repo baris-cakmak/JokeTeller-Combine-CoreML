@@ -15,10 +15,8 @@ protocol WebsocketServiceInterface {
 final class WebsocketService: WebsocketServiceInterface {
 
     @Published private var streamData: Data = .init()
-    @Published private var connectionInfo: String = ""
     var connectionStatusPublisher: CurrentValueSubject<ConnectionStatus, Never> = .init(.disconnected)
     var dataPublisher: Published<Data>.Publisher { $streamData }
-    var connectionInfoPublisher: Published<String>.Publisher { $connectionInfo }
     var websocketErrorSubject: PassthroughSubject<Error, Never> = .init()
     var isConnected: CurrentValueSubject<Bool, Never> = .init(false)
     // make internal/public to user the specify chosen url if you are not lazy..
@@ -32,14 +30,7 @@ final class WebsocketService: WebsocketServiceInterface {
 extension WebsocketService {
     func connect() {
         websocket.connect()
-        connectionStatusPublisher.send(.processsing)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            if self.connectionStatusPublisher.value == .processsing {
-
-                self.connectionInfo = ConnectionStatus.checkServer.titleCased
-                self.connectionStatusPublisher.send(.checkServer)
-            }
-        }
+        handleConnectionStatus()
     }
     func disconnect() {
         websocket.forceDisconnect()
@@ -96,10 +87,23 @@ extension WebsocketService {
         }
     }
 }
+// MARK: - Helper
+extension WebsocketService {
+    private func handleConnectionStatus() {
+        if connectionStatusPublisher.value != .connected {
+            connectionStatusPublisher.send(.processsing)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                if self.connectionStatusPublisher.value == .processsing {
+                    self.connectionStatusPublisher.send(.checkServer)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Extension WebsocketServiceInterface
 extension WebsocketServiceInterface {
     func setWebsocketUrl(urlString: String) {
         setWebsocketUrl(urlString: urlString, completion: nil)
     }
-
 }

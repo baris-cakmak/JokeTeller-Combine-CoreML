@@ -113,14 +113,24 @@ final class HomeViewController: UIViewController, AlertPresentable {
             .dropFirst()
             .sink { [weak self] errorMessage in
                 self?.tellMeAJokeButton.isEnabled = true
-                self?.showAlert(type: PLAlertController.self, title: "Error", message: errorMessage, buttonText: "Cancel")
+                self?.showAlert(
+                    type: PLAlertController.self,
+                    title: "Error",
+                    message: errorMessage,
+                    buttonText: "Cancel"
+                )
             }
             .store(in: &cancellables)
         viewModel
             .successMessageToBeShown
             .dropFirst()
             .sink { [weak self] successMessage in
-                self?.showAlert(type: PLAlertController.self, title: "Success", message: successMessage, buttonText: "Ok")
+                self?.showAlert(
+                    type: PLAlertController.self,
+                    title: "Success",
+                    message: successMessage,
+                    buttonText: "Ok"
+                )
             }
             .store(in: &cancellables)
         viewModel

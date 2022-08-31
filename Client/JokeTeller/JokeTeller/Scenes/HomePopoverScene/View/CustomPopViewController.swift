@@ -75,7 +75,12 @@ final class CustomPopViewController: UIViewController, AlertPresentable {
 extension CustomPopViewController {
     @objc func didTapPopButtonTapped(button: UIButton) {
         guard let text = popTextField.text, !text.isEmpty else {
-            return showAlert(type: PLAlertController.self, title: "Type Error", message: "Text Something", buttonText: "Cancel")
+            return showAlert(
+                type: PLAlertController.self,
+                title: "Type Error",
+                message: "Text Something",
+                buttonText: "Cancel"
+            )
         }
         dismiss(animated: true)
         delegate?.didUserSavedText(text)

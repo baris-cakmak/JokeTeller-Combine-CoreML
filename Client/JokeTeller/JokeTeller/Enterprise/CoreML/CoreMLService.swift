@@ -55,13 +55,16 @@ extension CoreMLService {
         if let unwrappedResults = results as? [VNClassificationObservation] {
             let firstIdentifier = unwrappedResults.prefix(upTo: 1)
                 .filter {
-                    (configurations.minimumConfidence...configurations.maximumConfidence).contains(Double($0.confidence))
+                    (configurations.minimumConfidence...configurations.maximumConfidence)
+                    .contains(Double($0.confidence))
                 }
                 .map { observation in
                     observation.identifier.components(separatedBy: ",").first
                 }.first
             inferenceOutputs = unwrappedResults.prefix(upTo: 2)
-                .filter {                 (configurations.minimumConfidence...configurations.maximumConfidence).contains(Double($0.confidence))
+                .filter {
+                    (configurations.minimumConfidence...configurations.maximumConfidence)
+                    .contains(Double($0.confidence))
                 }
                 .compactMap {"\($0.confidence.formatted(.percent)) \($0.identifier)"
                 }

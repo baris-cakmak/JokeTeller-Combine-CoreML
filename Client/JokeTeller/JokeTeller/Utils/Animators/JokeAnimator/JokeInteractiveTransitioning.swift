@@ -27,9 +27,10 @@ extension JokeInteractiveTransitioning {
         let alphaToBeAnimated: CGFloat = calculateAlpha(viewForHeightRatio: view, verticalChange: verticalDelta)
         let imageScale: CGFloat = calculateScale(viewForHeightRatio: view, verticalChange: verticalDelta)
         let anchorPointOfFromImageFrame: CGPoint = .init(x: fromImageFrame.midX, y: fromImageFrame.midY)
+        let translatedYWithRespectToScaleRatio: CGFloat = snapshotView.frame.height * (1 - imageScale) / JokeInteractivePresentationConstants.scaleRatioRespectToHeight
         let newCenter: CGPoint = .init(
             x: (anchorPointOfFromImageFrame.x + translation.x),
-            y: (anchorPointOfFromImageFrame.y + (translation.y - snapshotView.frame.height * (1 - imageScale) / JokeInteractivePresentationConstants.scaleRatioRespectToHeight))
+            y: (anchorPointOfFromImageFrame.y + (translation.y - translatedYWithRespectToScaleRatio))
         )
         jokeAnimator.fromDelegate?.animationWillStart()
         jokeAnimator.toDelegate?.animationWillStart()
